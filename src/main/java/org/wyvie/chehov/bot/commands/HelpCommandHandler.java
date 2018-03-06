@@ -7,6 +7,8 @@ public class HelpCommandHandler implements CommandHandler {
 
     private TelegramBot telegramBot;
 
+    public static final String COMMAND = "help";
+
     private static final String HELP_TEXT =
             "I don't know how to help you, my child. I am deeply sorry.";
 
@@ -15,7 +17,7 @@ public class HelpCommandHandler implements CommandHandler {
     }
 
     @Override
-    public void handle(long chatId) {
+    public void handle(long chatId, String args) {
         SendMessage sendMessage = new SendMessage(chatId, HELP_TEXT);
 
         telegramBot.execute(sendMessage);

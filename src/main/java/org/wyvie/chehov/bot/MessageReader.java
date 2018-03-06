@@ -59,6 +59,9 @@ public class MessageReader {
             lastOffset = update.updateId() + 1;
 
             Message message = update.message();
+
+            logger.debug("Got message '" + message.text() + "' from chat_id " + message.chat().id());
+
             if (validateCommmand(message))
                 commandProcessor.processCommand(message);
 
@@ -72,17 +75,18 @@ public class MessageReader {
      * @return true if we want to process the command, false otherwise
      */
     private boolean validateCommmand(Message message) {
-        logger.debug("Got message '" + message.text() + "' from chat_id " + message.chat().id());
-
-        String messageText = message.text();
+        String messageText = message.text().toLowerCase();
 
         // if starts with '/' symbol, it's a command
         if (!StringUtils.isEmpty(messageText) &&
                 messageText.startsWith("/")) {
 
+            String command = messageText.contains(" ") ?
+                    messageText.split(" ")[0] : messageText;
+
             // talking to another bot here
-            if (messageText.contains("@") &&
-                    !messageText.endsWith("@" + botUsername)) {
+            if (command.contains("@") &&
+                    !command.endsWith("@" + botUsername)) {
 
                 return false;
             }
