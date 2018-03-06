@@ -23,23 +23,20 @@ public class MessageReader {
 
     private final Logger logger = LoggerFactory.getLogger(MessageReader.class);
 
+    private MessageProcessor messageProcessor;
     private TelegramBot telegramBot;
-
     private int telegramLimit;
 
     private int lastOffset;
 
     @Autowired
-    public MessageReader(@Qualifier("telegramBot") TelegramBot telegramBot,
-                         @Value("${telegram.limit}") String limit) {
+    public MessageReader(MessageProcessor messageProcessor,
+                         @Qualifier("telegramBot") TelegramBot telegramBot,
+                         @Value("${telegram.limit}") int limit) {
 
+        this.messageProcessor = messageProcessor;
         this.telegramBot = telegramBot;
-
-        try {
-            this.telegramLimit = Integer.parseInt(limit, 10);
-        } catch (NumberFormatException e) {
-            this.telegramLimit = 300;
-        }
+        this.telegramLimit = limit;
 
         this.lastOffset = 0;
     }
@@ -55,8 +52,8 @@ public class MessageReader {
             lastOffset = update.updateId() + 1;
 
             Message message = update.message();
-            System.out.println("new message here " + message.text());
-            logger.debug("New message here: " + message.text());
+            if (messageProcessor.processMessage(update.message()))
+                lastOffset = update.updateId() + 1;
         });
     }
 }
