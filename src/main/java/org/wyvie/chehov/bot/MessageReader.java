@@ -9,11 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.wyvie.chehov.TelegramProperties;
 
 import java.util.List;
@@ -24,20 +24,23 @@ public class MessageReader {
 
     private final Logger logger = LoggerFactory.getLogger(MessageReader.class);
 
-    private MessageProcessor messageProcessor;
+    private CommandProcessor commandProcessor;
     private TelegramBot telegramBot;
     private TelegramProperties telegramProperties;
+    private String botUsername;
 
     private int lastOffset;
 
     @Autowired
-    public MessageReader(MessageProcessor messageProcessor,
+    public MessageReader(CommandProcessor commandProcessor,
                          TelegramProperties telegramProperties,
-                         @Qualifier("telegramBot") TelegramBot telegramBot) {
+                         @Qualifier("telegramBot") TelegramBot telegramBot,
+                         @Qualifier("botUsername") String botUsername) {
 
-        this.messageProcessor = messageProcessor;
+        this.commandProcessor = commandProcessor;
         this.telegramBot = telegramBot;
         this.telegramProperties = telegramProperties;
+        this.botUsername = botUsername;
 
         this.lastOffset = 0;
     }
@@ -56,8 +59,38 @@ public class MessageReader {
             lastOffset = update.updateId() + 1;
 
             Message message = update.message();
-            if (messageProcessor.processMessage(update.message()))
-                lastOffset = update.updateId() + 1;
+            if (validateCommmand(message))
+                commandProcessor.processCommand(message);
+
+            lastOffset = update.updateId() + 1;
         });
+    }
+
+    /**
+     * Validates this is the command we would like to process
+     * @param message message from Telegram chat
+     * @return true if we want to process the command, false otherwise
+     */
+    private boolean validateCommmand(Message message) {
+        logger.debug("Got message '" + message.text() + "' from chat_id " + message.chat().id());
+
+        String messageText = message.text();
+
+        // if starts with '/' symbol, it's a command
+        if (!StringUtils.isEmpty(messageText) &&
+                messageText.startsWith("/")) {
+
+            // talking to another bot here
+            if (messageText.contains("@") &&
+                    !messageText.endsWith("@" + botUsername)) {
+
+                return false;
+            }
+
+            return true;
+        }
+
+        // not a command
+        return false;
     }
 }
