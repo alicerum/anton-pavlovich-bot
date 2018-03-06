@@ -14,6 +14,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.wyvie.chehov.TelegramProperties;
 
 import java.util.List;
 
@@ -25,25 +26,28 @@ public class MessageReader {
 
     private MessageProcessor messageProcessor;
     private TelegramBot telegramBot;
-    private int telegramLimit;
+    private TelegramProperties telegramProperties;
 
     private int lastOffset;
 
     @Autowired
     public MessageReader(MessageProcessor messageProcessor,
-                         @Qualifier("telegramBot") TelegramBot telegramBot,
-                         @Value("${telegram.limit}") int limit) {
+                         TelegramProperties telegramProperties,
+                         @Qualifier("telegramBot") TelegramBot telegramBot) {
 
         this.messageProcessor = messageProcessor;
         this.telegramBot = telegramBot;
-        this.telegramLimit = limit;
+        this.telegramProperties = telegramProperties;
 
         this.lastOffset = 0;
     }
 
     @Scheduled(fixedDelay = 200)
     public void readMessages() {
-        GetUpdates getUpdates = new GetUpdates().limit(this.telegramLimit).offset(lastOffset).timeout(0);
+        GetUpdates getUpdates = new GetUpdates()
+                .limit(telegramProperties.getUpdateLimit())
+                .offset(lastOffset)
+                .timeout(0);
 
         GetUpdatesResponse response = telegramBot.execute(getUpdates);
         List<Update> updates = response.updates();
