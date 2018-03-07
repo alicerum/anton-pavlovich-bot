@@ -75,11 +75,13 @@ public class MessageReader {
      * @return true if we want to process the command, false otherwise
      */
     private boolean validateCommmand(Message message) {
-        String messageText = message.text().toLowerCase();
+        String messageText = message.text();
 
         // if starts with '/' symbol, it's a command
         if (!StringUtils.isEmpty(messageText) &&
                 messageText.startsWith("/")) {
+
+            messageText = messageText.toLowerCase().trim();
 
             String command = messageText.contains(" ") ?
                     messageText.split(" ")[0] : messageText;
