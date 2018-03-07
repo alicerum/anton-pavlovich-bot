@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wyvie.chehov.bot.commands.CommandHandler;
+import org.wyvie.chehov.bot.commands.dailymenu.restaurant.CookPoint;
 import org.wyvie.chehov.bot.commands.dailymenu.restaurant.Kanas;
 import org.wyvie.chehov.bot.commands.dailymenu.restaurant.Restaurant;
 
@@ -20,12 +21,13 @@ public class DailyMenuCommandHandler implements CommandHandler {
 
     private TelegramBot telegramBot;
 
-    Map<String, Restaurant> restaurantMap = new HashMap<>();
+    private Map<String, Restaurant> restaurantMap = new HashMap<>();
 
     public DailyMenuCommandHandler(TelegramBot telegramBot) {
         this.telegramBot = telegramBot;
 
         restaurantMap.put(Kanas.NAME, new Kanas());
+        restaurantMap.put(CookPoint.NAME, new CookPoint());
     }
 
     @Override
