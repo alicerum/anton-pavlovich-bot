@@ -26,7 +26,7 @@ public abstract class Restaurant {
 
     }
 
-    private String getPageSource(String url) throws IOException {
+    protected String getPageSource(String url) throws IOException {
         URL pageUrl = null;
         try {
             pageUrl = new URL(url);
@@ -45,7 +45,7 @@ public abstract class Restaurant {
         return toString(urlConnection.getInputStream());
     }
 
-    private static String toString(InputStream inputStream) throws IOException
+    protected static String toString(InputStream inputStream) throws IOException
     {
         try (
                 BufferedReader bufferedReader =

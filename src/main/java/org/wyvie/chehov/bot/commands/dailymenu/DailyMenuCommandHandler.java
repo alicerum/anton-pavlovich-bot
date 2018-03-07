@@ -5,10 +5,9 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.wyvie.chehov.bot.commands.CommandHandler;
-import org.wyvie.chehov.bot.commands.dailymenu.restaurant.CookPoint;
-import org.wyvie.chehov.bot.commands.dailymenu.restaurant.Kanas;
-import org.wyvie.chehov.bot.commands.dailymenu.restaurant.Restaurant;
+import org.wyvie.chehov.bot.commands.dailymenu.restaurant.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +27,8 @@ public class DailyMenuCommandHandler implements CommandHandler {
 
         restaurantMap.put(Kanas.NAME, new Kanas());
         restaurantMap.put(CookPoint.NAME, new CookPoint());
+        restaurantMap.put(Purkynka.NAME, new Purkynka());
+        restaurantMap.put(PadThai.NAME, new PadThai());
     }
 
     @Override
@@ -46,6 +47,10 @@ public class DailyMenuCommandHandler implements CommandHandler {
             textToSend += sb.toString();
         } else {
            textToSend = restaurant.menu();
+
+           if (StringUtils.isEmpty(textToSend))
+               textToSend = "Something went wrong. I could not fetch menu for you." +
+                       "I am so very, very sorry. :'(";
         }
 
         SendMessage sendMessage = new SendMessage(message.chat().id(), textToSend);

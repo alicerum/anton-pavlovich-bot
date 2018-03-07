@@ -42,7 +42,7 @@ public class Kanas extends Restaurant {
                                 jidlo + " " +
                                 cena;
 
-                stringBuilder.append(polozka).append("\n");
+                stringBuilder.append(polozka).append("\n\n");
             }
         }
 
