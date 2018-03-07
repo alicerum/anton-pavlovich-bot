@@ -1,6 +1,7 @@
 package org.wyvie.chehov.bot.commands;
 
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 
 public class HelpCommandHandler implements CommandHandler {
@@ -17,8 +18,8 @@ public class HelpCommandHandler implements CommandHandler {
     }
 
     @Override
-    public void handle(long chatId, String args) {
-        SendMessage sendMessage = new SendMessage(chatId, HELP_TEXT);
+    public void handle(Message message, String args) {
+        SendMessage sendMessage = new SendMessage(message.chat().id(), HELP_TEXT);
 
         telegramBot.execute(sendMessage);
     }

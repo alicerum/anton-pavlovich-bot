@@ -48,7 +48,7 @@ public class CommandProcessor {
         command = command.split("@")[0].substring(1).toLowerCase().trim();
         arguments = arguments.trim();
 
-        getCommandHandler(command).handle(message.chat().id(), arguments);
+        getCommandHandler(command).handle(message, arguments);
     }
 
     private CommandHandler getCommandHandler(String command) {
