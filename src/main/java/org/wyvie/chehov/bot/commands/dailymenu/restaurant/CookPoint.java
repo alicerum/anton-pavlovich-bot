@@ -2,11 +2,10 @@ package org.wyvie.chehov.bot.commands.dailymenu.restaurant;
 
 import org.springframework.util.StringUtils;
 
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CookPoint implements Restaurant {
+public class CookPoint extends Restaurant {
 
     public static final String NAME = "cookpoint";
 
@@ -24,18 +23,16 @@ public class CookPoint implements Restaurant {
     }
 
     @Override
-    public String menu() {
-        String pageSource = "";
+    String getUrl() {
+        return URL;
+    }
 
-        try {
-            pageSource = URLUtils.getPageSource(URL);
-        } catch (IOException ignore) {
-        }
-
+    @Override
+    String processSource(String source) {
         StringBuilder stringBuilder = new StringBuilder("");
 
-        if (!StringUtils.isEmpty(pageSource)) {
-            Matcher matcher = pattern1.matcher(pageSource);
+        if (!StringUtils.isEmpty(source)) {
+            Matcher matcher = pattern1.matcher(source);
 
             if (matcher.find()) {
                 String inner = matcher.group(1);
