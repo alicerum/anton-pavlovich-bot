@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 import org.wyvie.chehov.bot.commands.CommandHandler;
 import org.wyvie.chehov.bot.commands.dailymenu.restaurant.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,11 +30,20 @@ public class DailyMenuCommandHandler implements CommandHandler {
         restaurantMap.put(CookPoint.NAME, new CookPoint());
         restaurantMap.put(Purkynka.NAME, new Purkynka());
         restaurantMap.put(PadThai.NAME, new PadThai());
+        restaurantMap.put(Nepal.NAME, new Nepal());
     }
 
     @Override
     public void handle(Message message, String args) {
         logger.debug("args is '" + args + "'");
+
+        int dayOfWeek = LocalDateTime.now().getDayOfWeek().getValue();
+        if (dayOfWeek > 5) {
+            SendMessage sendMessage = new SendMessage(message.chat().id(),
+                    "Only available on week days.");
+            telegramBot.execute(sendMessage);
+            return;
+        }
 
         Restaurant restaurant = restaurantMap.get(args);
         String textToSend;

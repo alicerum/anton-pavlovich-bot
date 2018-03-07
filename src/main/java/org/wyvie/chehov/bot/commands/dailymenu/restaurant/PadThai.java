@@ -1,20 +1,16 @@
 package org.wyvie.chehov.bot.commands.dailymenu.restaurant;
 
-import jdk.internal.util.xml.impl.Input;
-
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PadThai extends Restaurant {
 
     private static final String URL = "https://www.zomato.com/brno/pad-thai-kr%C3%A1lovo-pole-brno-sever/daily-menu";
-//    private static final String URL = "https://google.com/";
 
     public static final String NAME = "padthai";
 

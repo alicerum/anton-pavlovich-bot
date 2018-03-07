@@ -12,6 +12,7 @@ import org.wyvie.chehov.bot.commands.dailymenu.DailyMenuCommandHandler;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class CommandProcessor {
@@ -46,16 +47,15 @@ public class CommandProcessor {
         command = command.split("@")[0].substring(1).toLowerCase().trim();
         arguments = arguments.trim();
 
-        getCommandHandler(command).handle(message, arguments);
+        String finalArguments = arguments;
+        getCommandHandler(command).ifPresent(handler -> {
+            handler.handle(message, finalArguments);
+        });
     }
 
-    private CommandHandler getCommandHandler(String command) {
-        CommandHandler commandHandler = handlers.get(command);
+    private Optional<CommandHandler> getCommandHandler(String command) {
 
-        if (commandHandler == null)
-            commandHandler = handlers.get(HelpCommandHandler.COMMAND);
-
-        return commandHandler;
+        return Optional.ofNullable(handlers.get(command));
     }
 
 }
