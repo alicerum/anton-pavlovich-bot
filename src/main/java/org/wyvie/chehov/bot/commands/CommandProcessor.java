@@ -1,4 +1,4 @@
-package org.wyvie.chehov.bot;
+package org.wyvie.chehov.bot.commands;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.wyvie.chehov.TelegramProperties;
-import org.wyvie.chehov.bot.commands.CommandHandler;
-import org.wyvie.chehov.bot.commands.HelpCommandHandler;
 import org.wyvie.chehov.bot.commands.dailymenu.DailyMenuCommandHandler;
 
 import java.util.HashMap;

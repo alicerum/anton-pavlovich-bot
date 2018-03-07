@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.wyvie.chehov.TelegramProperties;
+import org.wyvie.chehov.bot.commands.CommandProcessor;
 
 import java.util.List;
 
