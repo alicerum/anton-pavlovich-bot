@@ -1,13 +1,15 @@
 package org.wyvie.chehov.bot.commands.dailymenu.restaurant;
 
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Service
 public class CookPoint extends Restaurant {
 
-    public static final String NAME = "cookpoint";
+    private static final String NAME = "cookpoint";
 
     private static final String URL = "http://cookpoint.cz/";
 
@@ -25,6 +27,11 @@ public class CookPoint extends Restaurant {
     @Override
     String getUrl() {
         return URL;
+    }
+
+    @Override
+    public String getName() {
+        return CookPoint.NAME;
     }
 
     @Override

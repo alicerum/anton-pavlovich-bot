@@ -1,5 +1,7 @@
 package org.wyvie.chehov.bot.commands.dailymenu.restaurant;
 
+import org.springframework.stereotype.Service;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,10 +10,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+@Service
 public abstract class Restaurant {
 
     abstract String getUrl();
     abstract String processSource(String source);
+
+    public abstract String getName();
 
 
     public String menu() {

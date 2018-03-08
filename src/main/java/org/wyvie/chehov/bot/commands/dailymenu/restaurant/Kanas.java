@@ -1,13 +1,15 @@
 package org.wyvie.chehov.bot.commands.dailymenu.restaurant;
 
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Service
 public class Kanas extends Restaurant {
 
-    public static final String NAME = "kanas";
+    private static final String NAME = "kanas";
 
     private static final String URL = "http://www.kanas.cz/";
 
@@ -23,6 +25,11 @@ public class Kanas extends Restaurant {
     @Override
     String getUrl() {
         return URL;
+    }
+
+    @Override
+    public String getName() {
+        return Kanas.NAME;
     }
 
     @Override

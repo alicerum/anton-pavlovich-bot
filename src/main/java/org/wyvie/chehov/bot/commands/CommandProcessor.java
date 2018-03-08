@@ -7,14 +7,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.wyvie.chehov.TelegramProperties;
 import org.wyvie.chehov.bot.commands.dailymenu.DailyMenuCommandHandler;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Component
+@Service
 public class CommandProcessor {
 
     private final Logger logger = LoggerFactory.getLogger(CommandProcessor.class);
@@ -23,10 +25,9 @@ public class CommandProcessor {
 
     @Autowired
     public CommandProcessor(@Qualifier("telegramBot")TelegramBot telegramBot,
-                            TelegramProperties telegramProperties) {
+                            List<CommandHandler> commandHandlers) {
 
-        handlers.put(HelpCommandHandler.COMMAND, new HelpCommandHandler(telegramBot));
-        handlers.put(DailyMenuCommandHandler.COMMAND, new DailyMenuCommandHandler(telegramBot));
+        commandHandlers.forEach(commandHandler -> handlers.put(commandHandler.getCommand(), commandHandler));
     }
 
     public void processCommand(Message message) {

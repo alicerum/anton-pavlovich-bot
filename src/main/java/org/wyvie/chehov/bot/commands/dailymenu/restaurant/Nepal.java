@@ -1,16 +1,19 @@
 package org.wyvie.chehov.bot.commands.dailymenu.restaurant;
 
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Service
 public class Nepal extends Restaurant {
 
     private static final String MENU_URL = "http://nepalbrno.cz/weekly-menu/";
 
-    public static final String NAME = "nepal";
+    private static final String NAME = "nepal";
 
     private final Pattern pattern;
 
@@ -22,6 +25,11 @@ public class Nepal extends Restaurant {
     @Override
     String getUrl() {
         return MENU_URL;
+    }
+
+    @Override
+    public String getName() {
+        return Nepal.NAME;
     }
 
     @Override
