@@ -1,7 +1,9 @@
 package org.wyvie.chehov.bot.commands.dailymenu.restaurant;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.wyvie.chehov.bot.commands.helper.UrlHelper;
 
 import java.time.LocalDateTime;
 import java.util.regex.Matcher;
@@ -16,7 +18,9 @@ public class Purkynka extends Restaurant {
 
     private final Pattern pattern;
 
-    public Purkynka() {
+    @Autowired
+    public Purkynka(UrlHelper urlHelper) {
+        super(urlHelper);
         this.pattern = Pattern.compile("<pre>Menu .*?(?=</pre)</pre><pre>(.*?(?=</pre))</pre>");
     }
 

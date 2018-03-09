@@ -1,7 +1,9 @@
 package org.wyvie.chehov.bot.commands.dailymenu.restaurant;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.wyvie.chehov.bot.commands.helper.UrlHelper;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,7 +17,10 @@ public class Kanas extends Restaurant {
 
     private final Pattern pattern;
 
-    public Kanas() {
+    @Autowired
+    public Kanas(UrlHelper urlHelper) {
+        super(urlHelper);
+
         pattern = Pattern.compile("<div class=\"polozka\">\\s*" +
                 "<span class=\"mnozstvi\">([^<]*)</span>\\s*" +
                 "<span class=\"jidlo\">([^<]*)</span>\\s*" +

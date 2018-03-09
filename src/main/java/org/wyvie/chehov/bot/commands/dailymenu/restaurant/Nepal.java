@@ -1,6 +1,8 @@
 package org.wyvie.chehov.bot.commands.dailymenu.restaurant;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.wyvie.chehov.bot.commands.helper.UrlHelper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,8 +19,9 @@ public class Nepal extends Restaurant {
 
     private final Pattern pattern;
 
-
-    public Nepal() {
+    @Autowired
+    public Nepal(UrlHelper urlHelper) {
+        super(urlHelper);
         pattern = Pattern.compile("<tr>\\s*<td>(.*?(?=</td))</td><td><strong>(.*?(?=</strong))</strong></td>\\s*</tr>");
     }
 

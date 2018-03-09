@@ -1,7 +1,9 @@
 package org.wyvie.chehov.bot.commands.dailymenu.restaurant;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.wyvie.chehov.bot.commands.helper.UrlHelper;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,7 +18,10 @@ public class CookPoint extends Restaurant {
     private final Pattern pattern1;
     private final Pattern pattern2;
 
-    public CookPoint() {
+    @Autowired
+    public CookPoint(UrlHelper urlHelper) {
+        super(urlHelper);
+
         pattern1 = Pattern.compile("<h1>Daily menu</h1>(.*?(?=</table))</table>");
 
         pattern2 = Pattern.compile("<strong class=\"mname\">([^<]*)</strong>.*?(?=<small)" +

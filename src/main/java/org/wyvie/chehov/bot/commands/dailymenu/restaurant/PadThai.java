@@ -1,6 +1,8 @@
 package org.wyvie.chehov.bot.commands.dailymenu.restaurant;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.wyvie.chehov.bot.commands.helper.UrlHelper;
 
 @Service
 public class PadThai extends Restaurant {
@@ -8,6 +10,11 @@ public class PadThai extends Restaurant {
     private static final String URL = "http://rhlp.skutka.cz/PadThai";
 
     private static final String NAME = "padthai";
+
+    @Autowired
+    public PadThai(UrlHelper urlHelper) {
+        super(urlHelper);
+    }
 
     @Override
     String getUrl() {
