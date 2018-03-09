@@ -3,8 +3,10 @@ package org.wyvie.chehov.bot;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.request.GetUpdates;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
+import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +15,18 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.wyvie.chehov.TelegramProperties;
 import org.wyvie.chehov.bot.commands.CommandProcessor;
+import org.wyvie.chehov.database.model.UserEntity;
+import org.wyvie.chehov.database.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Service
 public class MessageReader {
 
     private final Logger logger = LoggerFactory.getLogger(MessageReader.class);
@@ -28,7 +34,9 @@ public class MessageReader {
     private CommandProcessor commandProcessor;
     private TelegramBot telegramBot;
     private TelegramProperties telegramProperties;
-    private String botUsername;
+    private User botUser;
+
+    private UserRepository userRepository;
 
     private int lastOffset;
 
@@ -36,12 +44,14 @@ public class MessageReader {
     public MessageReader(CommandProcessor commandProcessor,
                          TelegramProperties telegramProperties,
                          @Qualifier("telegramBot") TelegramBot telegramBot,
-                         @Qualifier("botUsername") String botUsername) {
+                         @Qualifier("botUser") User botUser,
+                         UserRepository userRepository) {
 
         this.commandProcessor = commandProcessor;
         this.telegramBot = telegramBot;
         this.telegramProperties = telegramProperties;
-        this.botUsername = botUsername;
+        this.botUser = botUser;
+        this.userRepository = userRepository;
 
         this.lastOffset = 0;
     }
@@ -62,6 +72,8 @@ public class MessageReader {
             Message message = update.message();
 
             logger.debug("Got message '" + message.text() + "' from chat_id " + message.chat().id());
+
+            persistUser(message.from());
 
             if (validateCommmand(message))
                 commandProcessor.processCommand(message);
@@ -89,7 +101,7 @@ public class MessageReader {
 
             // talking to another bot here
             if (command.contains("@") &&
-                    !command.endsWith("@" + botUsername)) {
+                    !command.endsWith("@" + botUser.username())) {
 
                 return false;
             }
@@ -99,5 +111,24 @@ public class MessageReader {
 
         // not a command
         return false;
+    }
+
+    private void persistUser(User user) {
+        Integer userId = user.id();
+        if (userId != null) {
+            UserEntity userEntity = userRepository
+                    .findById((long)userId)
+                    .orElseGet(UserEntity::new);
+
+            userEntity.setId((long)userId);
+            userEntity.setUsername(user.username());
+            userEntity.setLastSeen(LocalDateTime.now());
+            userEntity.setAllowed(true);
+            userEntity.setFirstName(user.firstName());
+            userEntity.setLastName(user.lastName());
+
+            userRepository.save(userEntity);
+            userRepository.flush();
+        }
     }
 }

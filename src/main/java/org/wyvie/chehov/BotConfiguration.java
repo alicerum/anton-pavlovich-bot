@@ -1,6 +1,7 @@
 package org.wyvie.chehov;
 
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.request.GetMe;
 import com.pengrad.telegrambot.response.GetMeResponse;
 import org.slf4j.Logger;
@@ -34,12 +35,12 @@ public class BotConfiguration {
         return new TelegramBot(telegramProperties.getApiKey());
     }
 
-    @Bean("botUsername")
+    @Bean("botUser")
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-    public String telegramUsername(@Qualifier("telegramBot") TelegramBot telegramBot) {
+    public User telegramUser(@Qualifier("telegramBot") TelegramBot telegramBot) {
         GetMe getMe = new GetMe();
 
         GetMeResponse response = telegramBot.execute(getMe);
-        return response.user().username();
+        return response.user();
     }
 }
