@@ -47,7 +47,7 @@ public class WikiCommand implements CommandHandler {
         this.botUser = botUser;
 
         this.pattern1 = Pattern.compile("<h1><span[^>]*></span>" +
-                "<span class=\"mw-headline\" id=\"Русский\">Русский</span></h1>(.*?(</h1>|</body>))");
+                "<span class=\"mw-headline\" id=\"Русский\">Русский</span>.*?(?=</h1>)</h1>(.*?(</h1>|</body>))");
         this.pattern2 = Pattern.compile("<span [^>]*id=\"Значение[^\"]*\">.*?(?=<ol>)" +
                 "<ol>(.*?(?=</ol>))</ol>");
     }
