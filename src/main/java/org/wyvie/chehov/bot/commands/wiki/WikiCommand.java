@@ -16,6 +16,8 @@ import org.wyvie.chehov.bot.commands.helper.UrlHelper;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +35,8 @@ public class WikiCommand implements CommandHandler {
     private final User botUser;
     private final UrlHelper urlHelper;
 
-    private final Pattern pattern;
+    private final Pattern pattern1;
+    private final Pattern pattern2;
 
     @Autowired
     public WikiCommand(@Qualifier("telegramBot") TelegramBot telegramBot,
@@ -43,7 +46,9 @@ public class WikiCommand implements CommandHandler {
         this.urlHelper = urlHelper;
         this.botUser = botUser;
 
-        this.pattern = Pattern.compile("<span [^>]*id=\"Значение\">.*?(?=<ol>)" +
+        this.pattern1 = Pattern.compile("<h1><span[^>]*></span>" +
+                "<span class=\"mw-headline\" id=\"Русский\">Русский</span></h1>(.*?(</h1>|</body>))");
+        this.pattern2 = Pattern.compile("<span [^>]*id=\"Значение[^\"]*\">.*?(?=<ol>)" +
                 "<ol>(.*?(?=</ol>))</ol>");
     }
 
@@ -76,18 +81,34 @@ public class WikiCommand implements CommandHandler {
             return;
         }
 
-        Matcher matcher = pattern.matcher(source);
-        if (!matcher.find()) {
+        Matcher matcher = pattern1.matcher(source);
+        if (matcher.find()) {
+            matcher = pattern2.matcher(matcher.group(1));
+        } else {
+            logger.error("io exception in wiki on page: " + url);
+            sendMessage(message.chat().id(), "Извините, где-то я напутал и что-то пошло не так.");
+            return;
+        }
+
+        List<String> listOfDefinitions = new ArrayList<>();
+        while (matcher.find()) {
+            String definition = matcher.group(1)
+                    .replaceAll("(◆&#160;.*?(?=</li>))", "")
+                    .replaceAll("</li>", "\n\n")
+                    .replaceAll("(<[^>]*>)", "")
+                    .replaceAll("&#160;", " ");
+
+            listOfDefinitions.add(definition);
+        }
+
+        if (listOfDefinitions.isEmpty()) {
             logger.error("matcher error in wiki page: " + url);
             sendMessage(message.chat().id(), "Не нашёл. Отнюдь.");
             return;
         }
 
-        String definitions = matcher.group(1)
-                .replaceAll("(◆&#160;.*?(?=</li>))", "")
-                .replaceAll("</li>", "\n\n")
-                .replaceAll("(<[^>]*>)", "");
-        sendMessage(message.chat().id(), definitions);
+        listOfDefinitions.forEach(definition ->
+                sendMessage(message.chat().id(), definition));
     }
 
     private void sendMessage(long chatId, String errorText) {
