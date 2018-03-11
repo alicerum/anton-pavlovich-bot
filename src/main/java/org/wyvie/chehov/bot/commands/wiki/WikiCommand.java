@@ -31,12 +31,16 @@ public class WikiCommand implements CommandHandler {
     private static final String URL_TEMPLATE="https://ru.wiktionary.org/w/index.php?printable=yes&" +
             "title=%TITLE%";
 
+    private static final String MESSAGE_ERROR = "Извините, где-то я напутал и что-то пошло не так.";
+    private static final String MESSAGE_NOTFOUND = "Не нашёл. Отнюдь.";
+
     private final TelegramBot telegramBot;
     private final User botUser;
     private final UrlHelper urlHelper;
 
     private final Pattern pattern1;
     private final Pattern pattern2;
+    private final Pattern redirectPattern;
 
     @Autowired
     public WikiCommand(@Qualifier("telegramBot") TelegramBot telegramBot,
@@ -50,6 +54,8 @@ public class WikiCommand implements CommandHandler {
                 "<span class=\"mw-headline\" id=\"Русский\">Русский</span>.*?(?=</h1>)</h1>(.*?(</h1>|</body>))");
         this.pattern2 = Pattern.compile("<span [^>]*id=\"Значение[^\"]*\">.*?(?=<ol>)" +
                 "<ol>(.*?(?=</ol>))</ol>");
+
+        this.redirectPattern = Pattern.compile("<span class=\"redirectText\"><a[^>]*>(.*?(?=</a>))</a></span>");
     }
 
     @Override
@@ -59,7 +65,7 @@ public class WikiCommand implements CommandHandler {
 
     @Override
     public void handle(Message message, String args) {
-        if (StringUtils.isEmpty(args)) {
+        if (StringUtils.isEmpty(args.trim())) {
             sendMessage(message.chat().id(),
                     "Пожалуйста, добавьте предмет поиска.\n" +
                             "Пример: /" + COMMAND + "@" + botUser.username() + " собачка");
@@ -67,17 +73,19 @@ public class WikiCommand implements CommandHandler {
             return;
         }
 
-        String url = URL_TEMPLATE.replace("%TITLE%", args);
+        String url = URL_TEMPLATE.replace("%TITLE%", args.toLowerCase().trim());
 
         String source;
         try {
-            source = urlHelper.getPageSource(url);
-        } catch (FileNotFoundException e) {
-            sendMessage(message.chat().id(), "Не нашёл. Отнюдь.");
-            return;
+            source = urlHelper.getPageSourceIgnoreNotFound(url);
+            Matcher matcher = redirectPattern.matcher(source);
+            if (matcher.find()) {
+                url = URL_TEMPLATE.replace("%TITLE%", matcher.group(1));
+                source = urlHelper.getPageSourceIgnoreNotFound(url);
+            }
         } catch (IOException e) {
             logger.error("io exception in wiki on page: " + url);
-            sendMessage(message.chat().id(), "Извините, где-то я напутал и что-то пошло не так.");
+            sendMessage(message.chat().id(), MESSAGE_ERROR);
             return;
         }
 
@@ -86,7 +94,7 @@ public class WikiCommand implements CommandHandler {
             matcher = pattern2.matcher(matcher.group(1));
         } else {
             logger.error("io exception in wiki on page: " + url);
-            sendMessage(message.chat().id(), "Извините, где-то я напутал и что-то пошло не так.");
+            sendMessage(message.chat().id(), MESSAGE_NOTFOUND);
             return;
         }
 
@@ -103,7 +111,7 @@ public class WikiCommand implements CommandHandler {
 
         if (listOfDefinitions.isEmpty()) {
             logger.error("matcher error in wiki page: " + url);
-            sendMessage(message.chat().id(), "Не нашёл. Отнюдь.");
+            sendMessage(message.chat().id(), MESSAGE_NOTFOUND);
             return;
         }
 
