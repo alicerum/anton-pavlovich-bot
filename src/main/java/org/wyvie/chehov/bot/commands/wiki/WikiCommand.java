@@ -14,7 +14,6 @@ import org.springframework.util.StringUtils;
 import org.wyvie.chehov.bot.commands.CommandHandler;
 import org.wyvie.chehov.bot.commands.helper.UrlHelper;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +72,10 @@ public class WikiCommand implements CommandHandler {
             return;
         }
 
-        String url = URL_TEMPLATE.replace("%TITLE%", args.toLowerCase().trim());
+        String url = URL_TEMPLATE.replace("%TITLE%", args
+                .replaceAll(" ", "_")
+                .toLowerCase()
+                .trim());
 
         String source;
         try {
