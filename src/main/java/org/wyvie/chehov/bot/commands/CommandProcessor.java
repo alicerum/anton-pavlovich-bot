@@ -52,6 +52,12 @@ public class CommandProcessor {
         });
     }
 
+    public void processKarma(Message message) {
+        getCommandHandler("karma" + message.text().trim()).ifPresent(handler ->
+                handler.handle(message, "")
+        );
+    }
+
     private Optional<CommandHandler> getCommandHandler(String command) {
 
         return Optional.ofNullable(handlers.get(command));

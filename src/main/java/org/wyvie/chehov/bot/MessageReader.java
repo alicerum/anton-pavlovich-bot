@@ -71,14 +71,21 @@ public class MessageReader {
 
             Message message = update.message();
 
-            logger.debug("Got message '" + message.text() + "' from chat_id " + message.chat().id());
+            if (message.text() != null) {
+                logger.debug("Got message '" + message.text() + "' from chat_id " + message.chat().id());
 
-            persistUser(message.from());
+                persistUser(message.from());
 
-            if (validateCommmand(message))
-                commandProcessor.processCommand(message);
+                if (validateCommmand(message))
+                    commandProcessor.processCommand(message);
+                else {
+                    String messageText = message.text().trim();
+                    if (messageText.equals("+") || messageText.equals("-"))
+                        commandProcessor.processKarma(message);
+                }
 
-            lastOffset = update.updateId() + 1;
+                lastOffset = update.updateId() + 1;
+            }
         });
     }
 

@@ -22,7 +22,7 @@ public abstract class AbstractKarmaCommand implements CommandHandler {
     private static final String ERROR_YOURSELF = "Лайкать себя некрасиво";
     private static final String INFO_NEW_KARMA = "Готово! Теперь у %USER% карма %KARMA%";
 
-    private final UserRepository userRepository;
+    final UserRepository userRepository;
     private final TelegramProperties telegramProperties;
     private final TelegramBot telegramBot;
 
@@ -76,11 +76,11 @@ public abstract class AbstractKarmaCommand implements CommandHandler {
                         .map(UserEntity::getLastSetKarma)
                         .orElse(LocalDateTime.MIN);
 
-        LocalDateTime lastGood = LocalDateTime.now().minus(Duration.of(updateDelay, ChronoUnit.MINUTES));
+        LocalDateTime lastGood = LocalDateTime.now().minus(Duration.of(updateDelay, ChronoUnit.SECONDS));
         return lastUserSetKarma.isBefore(lastGood);
     }
 
-    private void sendMessage(long chatId, String message) {
+    void sendMessage(long chatId, String message) {
         SendMessage sendMessage = new SendMessage(chatId, message);
         telegramBot.execute(sendMessage);
     }
