@@ -8,6 +8,8 @@ public class TelegramProperties {
     private String apiKey;
     private int updateLimit;
 
+    private Karma karma;
+
     public String getApiKey() {
         return apiKey;
     }
@@ -22,5 +24,25 @@ public class TelegramProperties {
 
     public void setUpdateLimit(int updateLimit) {
         this.updateLimit = updateLimit;
+    }
+
+    public Karma getKarma() {
+        return karma;
+    }
+
+    public void setKarma(Karma karma) {
+        this.karma = karma;
+    }
+
+    public static class Karma {
+        private int updateDelay;
+
+        public int getUpdateDelay() {
+            return updateDelay;
+        }
+
+        public void setUpdateDelay(int updateDelay) {
+            this.updateDelay = updateDelay;
+        }
     }
 }

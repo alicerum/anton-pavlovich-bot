@@ -117,10 +117,10 @@ public class MessageReader {
         Integer userId = user.id();
         if (userId != null) {
             UserEntity userEntity = userRepository
-                    .findById((long)userId)
+                    .findById(userId)
                     .orElseGet(UserEntity::new);
 
-            userEntity.setId((long)userId);
+            userEntity.setId(userId);
             userEntity.setUsername(user.username());
             userEntity.setLastSeen(LocalDateTime.now());
             userEntity.setAllowed(true);

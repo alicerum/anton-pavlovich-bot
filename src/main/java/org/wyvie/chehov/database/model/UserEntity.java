@@ -1,5 +1,7 @@
 package org.wyvie.chehov.database.model;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -9,7 +11,7 @@ import java.time.LocalDateTime;
 public class UserEntity {
 
     @Id
-    private long id;
+    private int id;
 
     @Column
     private String username;
@@ -23,14 +25,21 @@ public class UserEntity {
     @Column(nullable = false)
     private boolean allowed;
 
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int karma;
+
+    @Column
+    private LocalDateTime lastSetKarma;
+
     @Column
     private LocalDateTime lastSeen;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -72,5 +81,21 @@ public class UserEntity {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public int getKarma() {
+        return karma;
+    }
+
+    public void setKarma(int karma) {
+        this.karma = karma;
+    }
+
+    public LocalDateTime getLastSetKarma() {
+        return lastSetKarma;
+    }
+
+    public void setLastSetKarma(LocalDateTime lastSetKarma) {
+        this.lastSetKarma = lastSetKarma;
     }
 }
