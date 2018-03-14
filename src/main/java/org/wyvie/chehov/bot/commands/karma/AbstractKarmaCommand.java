@@ -41,28 +41,15 @@ public abstract class AbstractKarmaCommand implements CommandHandler {
         return userEntity.map(UserEntity::getKarma).orElse(0);
     }
 
-    void incUserKarma(User telegramUser) {
+    void addToKarma(User telegramUser, int amountToAdd) {
         Optional<UserEntity> userEntity = userRepository.findById(telegramUser.id());
         UserEntity user;
         if (userEntity.isPresent()) {
             user = userEntity.get();
-            user.setKarma(user.getKarma() + 1);
+            user.setKarma(user.getKarma() + amountToAdd);
         } else {
             user = createUser(telegramUser);
-            user.setKarma(1);
-        }
-        userRepository.save(user);
-    }
-
-    void decUserKarma(User telegramUser) {
-        Optional<UserEntity> userEntity = userRepository.findById(telegramUser.id());
-        UserEntity user;
-        if (userEntity.isPresent()) {
-            user = userEntity.get();
-            user.setKarma(user.getKarma() - 1);
-        } else {
-            user = createUser(telegramUser);
-            user.setKarma(-1);
+            user.setKarma(amountToAdd);
         }
         userRepository.save(user);
     }

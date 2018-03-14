@@ -32,6 +32,6 @@ public class KarmaDecCommand extends AbstractKarmaCommand {
 
     @Override
     void processKarma(User user) {
-        decUserKarma(user);
+        addToKarma(user, -1);
     }
 }

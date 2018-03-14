@@ -32,6 +32,6 @@ public class KarmaIncCommand extends AbstractKarmaCommand {
 
     @Override
     void processKarma(User user) {
-        incUserKarma(user);
+        addToKarma(user, 1);
     }
 }
