@@ -4,7 +4,6 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.request.SendMessage;
-import org.springframework.util.StringUtils;
 import org.wyvie.chehov.TelegramProperties;
 import org.wyvie.chehov.bot.commands.CommandHandler;
 import org.wyvie.chehov.database.model.UserEntity;
@@ -88,11 +87,6 @@ public abstract class AbstractKarmaCommand implements CommandHandler {
     void processCommand(Message message) {
         int userId = message.from().id();
 
-        if (!canUserUpdateNow(userId)) {
-            sendMessage(message.chat().id(), ERROR_TOO_EARLY);
-            return;
-        }
-
         Message replied = message.replyToMessage();
         if (replied == null) {
             sendMessage(message.chat().id(), ERROR_NOT_REPLY);
@@ -104,17 +98,22 @@ public abstract class AbstractKarmaCommand implements CommandHandler {
             return;
         }
 
+        if (!canUserUpdateNow(userId)) {
+            sendMessage(message.chat().id(), ERROR_TOO_EARLY);
+            return;
+        }
+
         processKarma(replied.from());
 
         updateLastSetKarma(message.from().id());
 
         int newKarma = getUserKarma(replied.from().id());
 
-        String username = replied.from().username().trim();
-        if (StringUtils.isEmpty(username))
+        String username = replied.from().username();
+        if (username == null || "".equals(username.trim()))
             username = (replied.from().firstName() + " " + replied.from().lastName()).trim();
         else
-            username = "@" + username;
+            username = "@" + username.trim();
 
         sendMessage(message.chat().id(),
                 INFO_NEW_KARMA.replaceAll("%USER%", username)

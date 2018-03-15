@@ -6,15 +6,11 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.request.GetUpdates;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
-import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.wyvie.chehov.TelegramProperties;
@@ -24,7 +20,6 @@ import org.wyvie.chehov.database.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MessageReader {
@@ -71,7 +66,7 @@ public class MessageReader {
 
             Message message = update.message();
 
-            if (message.text() != null) {
+            if (message != null && message.text() != null) {
                 logger.debug("Got message '" + message.text() + "' from chat_id " + message.chat().id());
 
                 persistUser(message.from());

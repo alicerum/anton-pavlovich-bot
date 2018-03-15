@@ -2,7 +2,9 @@ package org.wyvie.chehov;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.User;
+import com.pengrad.telegrambot.request.DeleteWebhook;
 import com.pengrad.telegrambot.request.GetMe;
+import com.pengrad.telegrambot.request.SetWebhook;
 import com.pengrad.telegrambot.response.GetMeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.EnableScheduling;
+
+import java.io.File;
 
 @Configuration
 @EnableScheduling
