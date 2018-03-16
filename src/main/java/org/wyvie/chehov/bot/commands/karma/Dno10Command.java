@@ -9,20 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.wyvie.chehov.TelegramProperties;
 import org.wyvie.chehov.database.model.UserEntity;
 import org.wyvie.chehov.database.repository.UserRepository;
 
 @Service
-public class Top10Command extends AbstractKarmaCommand {
+public class Dno10Command extends AbstractKarmaCommand {
 
-    private final Logger logger = LoggerFactory.getLogger(Top10Command.class);
+    private final Logger logger = LoggerFactory.getLogger(Dno10Command.class);
 
-    private static final String COMMAND_NAME = "top10";
+    private static final String COMMAND_NAME = "dno10";
 
     @Autowired
-    public Top10Command(UserRepository userRepository,
+    public Dno10Command(UserRepository userRepository,
                         TelegramProperties telegramProperties,
                         TelegramBot telegramBot) {
 
@@ -36,9 +35,9 @@ public class Top10Command extends AbstractKarmaCommand {
     @Override
     public void handle(Message message, String args) {
         Page<UserEntity> userEntityPage =
-                userRepository.findAllByOrderByKarmaDesc(PageRequest.of(0, 10));
+                userRepository.findAllByOrderByKarmaAsc(PageRequest.of(0, 10));
 
-        logger.debug("Amount of users found in top10: " + userEntityPage.getTotalElements());
+        logger.debug("Amount of users found in dno10: " + userEntityPage.getTotalElements());
 
         processTopCommand(userEntityPage, message);
     }
