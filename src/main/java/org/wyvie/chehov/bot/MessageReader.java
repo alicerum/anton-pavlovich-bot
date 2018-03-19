@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.wyvie.chehov.TelegramProperties;
 import org.wyvie.chehov.bot.commands.CommandProcessor;
+import org.wyvie.chehov.bot.commands.helper.EmojiHelper;
 import org.wyvie.chehov.database.model.UserEntity;
 import org.wyvie.chehov.database.repository.UserRepository;
 
@@ -26,12 +27,12 @@ public class MessageReader {
 
     private final Logger logger = LoggerFactory.getLogger(MessageReader.class);
 
-    private CommandProcessor commandProcessor;
-    private TelegramBot telegramBot;
-    private TelegramProperties telegramProperties;
-    private User botUser;
-
-    private UserRepository userRepository;
+    private final CommandProcessor commandProcessor;
+    private final TelegramBot telegramBot;
+    private final TelegramProperties telegramProperties;
+    private final User botUser;
+    private final UserRepository userRepository;
+    private final EmojiHelper emojiHelper;
 
     private int lastOffset;
 
@@ -40,13 +41,15 @@ public class MessageReader {
                          TelegramProperties telegramProperties,
                          @Qualifier("telegramBot") TelegramBot telegramBot,
                          @Qualifier("botUser") User botUser,
-                         UserRepository userRepository) {
+                         UserRepository userRepository,
+                         EmojiHelper emojiHelper) {
 
         this.commandProcessor = commandProcessor;
         this.telegramBot = telegramBot;
         this.telegramProperties = telegramProperties;
         this.botUser = botUser;
         this.userRepository = userRepository;
+        this.emojiHelper = emojiHelper;
 
         this.lastOffset = 0;
     }
@@ -75,7 +78,9 @@ public class MessageReader {
                     commandProcessor.processCommand(message);
                 else {
                     String messageText = message.text().trim();
-                    if (messageText.equals("+") || messageText.equals("-"))
+                    if (messageText.equals("+") || messageText.equals("-")
+                            || emojiHelper.isThumbsUp(messageText)
+                            || emojiHelper.isThumbsDown(messageText))
                         commandProcessor.processKarma(message);
                 }
 

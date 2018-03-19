@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.wyvie.chehov.bot.commands.helper.EmojiHelper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,12 +21,17 @@ public class CommandProcessor {
 
     private Map<String, CommandHandler> handlers = new HashMap<>();
 
+    private final EmojiHelper emojiHelper;
+
     @Autowired
     public CommandProcessor(@Qualifier("telegramBot")TelegramBot telegramBot,
+                            EmojiHelper emojiHelper,
                             List<CommandHandler> commandHandlers) {
 
         commandHandlers.forEach(commandHandler ->
                 handlers.put(commandHandler.getCommand(), commandHandler));
+
+        this.emojiHelper = emojiHelper;
     }
 
     public void processCommand(Message message) {
@@ -53,7 +59,13 @@ public class CommandProcessor {
     }
 
     public void processKarma(Message message) {
-        getCommandHandler("karma" + message.text().trim()).ifPresent(handler ->
+        String messageText = message.text().trim();
+        if (emojiHelper.isThumbsUp(messageText))
+            messageText = "+";
+        else if (emojiHelper.isThumbsDown(messageText))
+            messageText = "-";
+
+        getCommandHandler("karma" + messageText).ifPresent(handler ->
                 handler.handle(message, "")
         );
     }
