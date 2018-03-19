@@ -82,7 +82,7 @@ public abstract class AbstractKarmaCommand implements CommandHandler {
         return lastUserSetKarma.isBefore(lastGood);
     }
 
-    void sendMessage(long chatId, String message) {
+    private void sendMessage(long chatId, String message) {
         SendMessage sendMessage = new SendMessage(chatId, message);
         telegramBot.execute(sendMessage);
     }
@@ -136,7 +136,7 @@ public abstract class AbstractKarmaCommand implements CommandHandler {
         return userEntity;
     }
 
-    protected void processTopCommand(Page<UserEntity> userEntities, Message message) {
+    void processTopCommand(Page<UserEntity> userEntities, Message message) {
         if (userEntities.getTotalElements() == 0) {
             sendMessage(message.chat().id(), ERROR_NO_USERS);
             return;

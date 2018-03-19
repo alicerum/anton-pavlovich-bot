@@ -10,6 +10,8 @@ public class TelegramProperties {
 
     private Karma karma;
 
+    private Weather weather;
+
     public String getApiKey() {
         return apiKey;
     }
@@ -34,6 +36,14 @@ public class TelegramProperties {
         this.karma = karma;
     }
 
+    public Weather getWeather() {
+        return weather;
+    }
+
+    public void setWeather(Weather weather) {
+        this.weather = weather;
+    }
+
     public static class Karma {
         private int updateDelay;
 
@@ -43,6 +53,18 @@ public class TelegramProperties {
 
         public void setUpdateDelay(int updateDelay) {
             this.updateDelay = updateDelay;
+        }
+    }
+
+    public static class Weather {
+        private String apiKey;
+
+        public String getApiKey() {
+            return apiKey;
+        }
+
+        public void setApiKey(String apiKey) {
+            this.apiKey = apiKey;
         }
     }
 }
