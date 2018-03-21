@@ -21,7 +21,7 @@ public class Purkynka extends Restaurant {
     @Autowired
     public Purkynka(UrlHelper urlHelper) {
         super(urlHelper);
-        this.pattern = Pattern.compile("<pre>Menu .*?(?=</pre)</pre><pre>(.*?(?=</pre))</pre>");
+        this.pattern = Pattern.compile("<pre>Menu .*?(?=<br)<br /><br />(.*?(?=</pre))</pre>");
     }
 
     @Override

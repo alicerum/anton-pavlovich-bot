@@ -13,7 +13,7 @@ public class CookPoint extends Restaurant {
 
     private static final String NAME = "cookpoint";
 
-    private static final String URL = "http://cookpoint.cz/";
+    private static final String URL = "http://cookpoint.cz/lang/2";
 
     private final Pattern pattern1;
     private final Pattern pattern2;
@@ -22,7 +22,7 @@ public class CookPoint extends Restaurant {
     public CookPoint(UrlHelper urlHelper) {
         super(urlHelper);
 
-        pattern1 = Pattern.compile("<h1>Daily menu</h1>(.*?(?=</table))</table>");
+        pattern1 = Pattern.compile("<h1>(Daily|Denní) menu</h1>(.*?(?=</table))</table>");
 
         pattern2 = Pattern.compile("<strong class=\"mname\">([^<]*)</strong>.*?(?=<small)" +
                 "<small>(.*?(?=</small))</small></td>" +
@@ -47,7 +47,7 @@ public class CookPoint extends Restaurant {
             Matcher matcher = pattern1.matcher(source);
 
             if (matcher.find()) {
-                String inner = matcher.group(1);
+                String inner = matcher.group(2);
 
                 matcher = pattern2.matcher(inner);
                 while (matcher.find()) {
