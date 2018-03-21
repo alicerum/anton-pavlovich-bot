@@ -106,13 +106,13 @@ public class SlovnikCommand implements CommandHandler {
             StringBuilder sb = new StringBuilder();
             b.forEach(l -> {
                sb.append(l);
-               sb.append("\n");
+               sb.append("   ");
                if (sb.length() > MESSAGE_MAX_SIZE) {
-                  sendMessage(messageChatId, sb.toString(), ParseMode.HTML);
+                  sendMessage(messageChatId, sb.toString().trim(), ParseMode.HTML);
                   sb.delete(0, sb.length() - 1);
                }
             });
-            sendMessage(messageChatId, sb.toString(), ParseMode.HTML);
+            sendMessage(messageChatId, sb.toString().trim(), ParseMode.HTML);
          });
       } catch (Exception e) {
          logger.error("Got exception while trying to process slovnik command", e);
