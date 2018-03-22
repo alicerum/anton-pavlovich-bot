@@ -53,9 +53,9 @@ public class CommandProcessor {
         arguments = arguments.trim();
 
         String finalArguments = arguments;
-        getCommandHandler(command).ifPresent(handler -> {
-            handler.handle(message, finalArguments);
-        });
+        getCommandHandler(command).ifPresent(handler ->
+                handler.handle(message, finalArguments)
+        );
     }
 
     public void processKarma(Message message) {
