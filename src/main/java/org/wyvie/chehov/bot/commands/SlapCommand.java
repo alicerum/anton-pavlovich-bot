@@ -85,7 +85,9 @@ public class SlapCommand implements CommandHandler {
         String userName = user.username();
 
         if (userName == null || "".equals(userName.trim())) {
-            userName = (user.firstName() + " " + user.lastName());
+            String firstName = user.firstName() == null ? "" : user.firstName();
+            String lastName = user.lastName() == null ? "" : user.lastName();
+            userName = (firstName + " " + lastName);
         } else
             userName = "@" + userName;
 

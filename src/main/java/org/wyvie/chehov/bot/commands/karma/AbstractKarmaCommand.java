@@ -113,9 +113,11 @@ public abstract class AbstractKarmaCommand implements CommandHandler {
         int newKarma = getUserKarma(replied.from().id());
 
         String username = replied.from().username();
-        if (username == null || "".equals(username.trim()))
-            username = (replied.from().firstName() + " " + replied.from().lastName()).trim();
-        else
+        if (username == null || "".equals(username.trim())) {
+            String firstName = replied.from().firstName() == null ? "" : replied.from().firstName();
+            String lastName = replied.from().lastName() == null ? "" : replied.from().lastName();
+            username = (firstName + " " + lastName).trim();
+        } else
             username = "@" + username.trim();
 
         sendMessage(message.chat().id(),
@@ -146,7 +148,9 @@ public abstract class AbstractKarmaCommand implements CommandHandler {
         userEntities.forEach(userEntity -> {
             String username = userEntity.getUsername();
             if (StringUtils.isEmpty(username)) {
-                username = (userEntity.getFirstName() + " " + userEntity.getLastName()).trim();
+                String firstName = userEntity.getFirstName() == null ? "" : userEntity.getFirstName();
+                String lastName = userEntity.getLastName() == null ? "" : userEntity.getLastName();
+                username = (firstName + " " + lastName).trim();
             }
 
             stringBuilder.append(username).append(": ").append(userEntity.getKarma()).append("\n");
