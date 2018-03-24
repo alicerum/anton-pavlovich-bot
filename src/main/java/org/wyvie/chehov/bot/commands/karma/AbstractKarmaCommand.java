@@ -7,6 +7,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.util.StringUtils;
 import org.wyvie.chehov.TelegramProperties;
+import org.wyvie.chehov.bot.annotations.PublicChatOnlyCommand;
 import org.wyvie.chehov.bot.commands.CommandHandler;
 import org.wyvie.chehov.database.model.UserEntity;
 import org.wyvie.chehov.database.repository.UserRepository;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
+@PublicChatOnlyCommand
 public abstract class AbstractKarmaCommand implements CommandHandler {
 
     private static final String ERROR_TOO_EARLY = "Защита от накрутки!";
