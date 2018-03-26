@@ -1,12 +1,14 @@
 package org.wyvie.chehov.bot.commands;
 
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.wyvie.chehov.bot.annotations.PublicChatOnlyCommand;
 import org.wyvie.chehov.bot.commands.helper.EmojiHelper;
 
 import java.util.HashMap;
@@ -24,7 +26,7 @@ public class CommandProcessor {
     private final EmojiHelper emojiHelper;
 
     @Autowired
-    public CommandProcessor(@Qualifier("telegramBot")TelegramBot telegramBot,
+    public CommandProcessor(@Qualifier("telegramBot") TelegramBot telegramBot,
                             EmojiHelper emojiHelper,
                             List<CommandHandler> commandHandlers) {
 
@@ -53,9 +55,11 @@ public class CommandProcessor {
         arguments = arguments.trim();
 
         String finalArguments = arguments;
-        getCommandHandler(command).ifPresent(handler ->
-                handler.handle(message, finalArguments)
-        );
+        getCommandHandler(command).ifPresent(handler -> {
+            if (canProcessCommand(message, handler)) {
+                handler.handle(message, finalArguments);
+            }
+        });
     }
 
     public void processKarma(Message message) {
@@ -65,9 +69,20 @@ public class CommandProcessor {
         else if (emojiHelper.isThumbsDown(messageText))
             messageText = "-";
 
-        getCommandHandler("karma" + messageText).ifPresent(handler ->
-                handler.handle(message, "")
-        );
+        getCommandHandler("karma" + messageText).ifPresent(handler -> {
+            if (canProcessCommand(message, handler)) {
+                handler.handle(message, "");
+            }
+        });
+    }
+
+    private boolean canProcessCommand(Message message, CommandHandler handler) {
+        boolean canProcess = false;
+        if (!(handler.getClass().isAnnotationPresent(PublicChatOnlyCommand.class) &&
+                message.chat().type() == Chat.Type.Private)) {
+            canProcess = true;
+        }
+        return canProcess;
     }
 
     private Optional<CommandHandler> getCommandHandler(String command) {
