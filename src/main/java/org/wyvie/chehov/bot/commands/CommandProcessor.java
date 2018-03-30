@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.wyvie.chehov.bot.annotations.PrivateChatOnlyCommand;
 import org.wyvie.chehov.bot.annotations.PublicChatOnlyCommand;
 import org.wyvie.chehov.bot.commands.helper.EmojiHelper;
 
@@ -77,10 +78,14 @@ public class CommandProcessor {
     }
 
     private boolean canProcessCommand(Message message, CommandHandler handler) {
-        boolean canProcess = false;
-        if (!(handler.getClass().isAnnotationPresent(PublicChatOnlyCommand.class) &&
-                message.chat().type() == Chat.Type.Private)) {
-            canProcess = true;
+        boolean canProcess = true;
+        if (handler.getClass().isAnnotationPresent(PublicChatOnlyCommand.class) &&
+                message.chat().type() == Chat.Type.Private) {
+            canProcess = false;
+        }
+        if (handler.getClass().isAnnotationPresent(PrivateChatOnlyCommand.class) &&
+                message.chat().type() != Chat.Type.Private) {
+            canProcess = false;
         }
         return canProcess;
     }

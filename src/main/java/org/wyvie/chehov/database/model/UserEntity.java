@@ -2,11 +2,9 @@ package org.wyvie.chehov.database.model;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -36,6 +34,12 @@ public class UserEntity {
 
     @Column
     private LocalDateTime lastSeen;
+
+    @OneToMany(targetEntity = UserOrderItemEntity.class,
+            mappedBy = "user",
+            fetch = FetchType.LAZY
+    )
+    private List<UserOrderItemEntity> orderedItems;
 
     public int getId() {
         return id;
@@ -99,5 +103,13 @@ public class UserEntity {
 
     public void setLastSetKarma(LocalDateTime lastSetKarma) {
         this.lastSetKarma = lastSetKarma;
+    }
+
+    public List<UserOrderItemEntity> getOrderedItems() {
+        return orderedItems;
+    }
+
+    public void setOrderedItems(List<UserOrderItemEntity> orderedItems) {
+        this.orderedItems = orderedItems;
     }
 }

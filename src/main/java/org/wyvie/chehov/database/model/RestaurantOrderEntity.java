@@ -17,9 +17,42 @@ public class RestaurantOrderEntity {
 
     @OneToMany(targetEntity = RestaurantOrderItemEntity.class,
             mappedBy = "restaurantOrder",
-            fetch = FetchType.EAGER)
+            fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
     private List<RestaurantOrderItemEntity> orderItems;
 
     @Column
-    private boolean isOpen;
+    private String name;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public UserEntity getOwner() {
+        return owner;
+    }
+
+    public void setOwner(UserEntity owner) {
+        this.owner = owner;
+    }
+
+    public List<RestaurantOrderItemEntity> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<RestaurantOrderItemEntity> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

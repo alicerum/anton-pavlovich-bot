@@ -23,4 +23,28 @@ public class RestaurantOrderItemEntity {
 
     @Column
     private String name;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public RestaurantOrderEntity getRestaurantOrder() {
+        return restaurantOrder;
+    }
+
+    public void setRestaurantOrder(RestaurantOrderEntity restaurantOrder) {
+        this.restaurantOrder = restaurantOrder;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
