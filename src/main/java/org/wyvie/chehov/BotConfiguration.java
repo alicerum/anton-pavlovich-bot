@@ -36,7 +36,11 @@ public class BotConfiguration {
     @Bean("telegramBot")
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
     public TelegramBot telegramBot() {
-        return new TelegramBot(telegramProperties.getApiKey());
+        TelegramBot.Builder builder = new TelegramBot.Builder(telegramProperties.getApiKey());
+        if (telegramProperties.isDebug()) {
+            builder.debug();
+        }
+        return builder.build();
     }
 
     @Bean("botUser")

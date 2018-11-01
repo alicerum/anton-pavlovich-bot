@@ -8,6 +8,8 @@ public class TelegramProperties {
     private String apiKey;
     private int updateLimit;
 
+    private boolean debug;
+
     private Karma karma;
 
     private Weather weather;
@@ -42,6 +44,14 @@ public class TelegramProperties {
 
     public void setWeather(Weather weather) {
         this.weather = weather;
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 
     public static class Karma {
