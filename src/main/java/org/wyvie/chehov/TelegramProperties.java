@@ -14,6 +14,8 @@ public class TelegramProperties {
 
     private Weather weather;
 
+    private String timeZone;
+
     public String getApiKey() {
         return apiKey;
     }
@@ -52,6 +54,14 @@ public class TelegramProperties {
 
     public void setDebug(boolean debug) {
         this.debug = debug;
+    }
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
     }
 
     public static class Karma {
