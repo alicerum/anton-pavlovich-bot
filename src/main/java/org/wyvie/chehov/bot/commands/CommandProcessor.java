@@ -69,7 +69,7 @@ public class CommandProcessor {
         else if (emojiHelper.isThumbsDown(messageText))
             messageText = "-";
 
-        getCommandHandler("karma" + messageText).ifPresent(handler -> {
+        getCommandHandler("karma" + messageText.charAt(0)).ifPresent(handler -> {
             if (canProcessCommand(message, handler)) {
                 handler.handle(message, "");
             }
