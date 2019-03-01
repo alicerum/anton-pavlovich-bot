@@ -78,7 +78,7 @@ public class MessageReader {
                     commandProcessor.processCommand(message);
                 else {
                     String messageText = message.text().trim();
-                    if (messageText.equals("+") || messageText.equals("-")
+                    if (messageText.startsWith("+") || messageText.startsWith("-")
                             || emojiHelper.isThumbsUp(messageText)
                             || emojiHelper.isThumbsDown(messageText))
                         commandProcessor.processKarma(message);
