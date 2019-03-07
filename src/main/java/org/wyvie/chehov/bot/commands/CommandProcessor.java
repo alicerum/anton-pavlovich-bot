@@ -3,6 +3,7 @@ package org.wyvie.chehov.bot.commands;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.model.Sticker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,15 @@ public class CommandProcessor {
     }
 
     public void processKarma(Message message) {
-        String messageText = message.text().trim();
+        String messageText;
+
+        Sticker sticker = message.sticker();
+        if (sticker != null) {
+            messageText = sticker.emoji();
+        } else {
+            messageText = message.text().trim();
+        }
+
         if (emojiHelper.isThumbsUp(messageText))
             messageText = "+";
         else if (emojiHelper.isThumbsDown(messageText))

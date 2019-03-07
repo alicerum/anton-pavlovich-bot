@@ -2,6 +2,7 @@ package org.wyvie.chehov.bot;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.model.Sticker;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.request.GetUpdates;
@@ -77,7 +78,9 @@ public class MessageReader {
                 if (validateCommmand(message))
                     commandProcessor.processCommand(message);
                 else {
-                    String messageText = message.text().trim();
+                    String messageText;
+                    messageText = message.text().trim();
+
                     if (messageText.startsWith("+") || messageText.startsWith("-")
                             || emojiHelper.isThumbsUp(messageText)
                             || emojiHelper.isThumbsDown(messageText))
@@ -85,6 +88,13 @@ public class MessageReader {
                 }
 
                 lastOffset = update.updateId() + 1;
+            }
+
+            if (message != null && message.sticker() != null) {
+                String emoji = message.sticker().emoji();
+                if (emojiHelper.isThumbsDown(emoji) || emojiHelper.isThumbsUp(emoji)) {
+                    commandProcessor.processKarma(message);
+                }
             }
         });
     }
