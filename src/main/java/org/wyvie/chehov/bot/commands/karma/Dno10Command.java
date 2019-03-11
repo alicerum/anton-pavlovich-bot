@@ -18,7 +18,7 @@ public class Dno10Command extends AbstractKarmaCommand {
 
     private final Logger logger = LoggerFactory.getLogger(Dno10Command.class);
 
-    private static final String COMMAND_NAME = "dno10";
+    private static final String COMMAND_NAME = "dno";
 
     @Autowired
     public Dno10Command(UserRepository userRepository,
@@ -35,11 +35,11 @@ public class Dno10Command extends AbstractKarmaCommand {
     @Override
     public void handle(Message message, String args) {
         Page<UserEntity> userEntityPage =
-                userRepository.findAllByOrderByKarmaAsc(PageRequest.of(0, 10));
+                userRepository.findAllByOrderByKarmaAsc(PageRequest.of(0, 20));
 
         logger.debug("Amount of users found in dno10: " + userEntityPage.getTotalElements());
 
-        processTopCommand(userEntityPage, message);
+        processTopCommand(userEntityPage, message, false);
     }
 
     @Override

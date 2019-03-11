@@ -140,14 +140,19 @@ public abstract class AbstractKarmaCommand implements CommandHandler {
         return userEntity;
     }
 
-    void processTopCommand(Page<UserEntity> userEntities, Message message) {
+    void processTopCommand(Page<UserEntity> userEntities, Message message, boolean allowPositive) {
         if (userEntities.getTotalElements() == 0) {
             sendMessage(message.chat().id(), ERROR_NO_USERS);
             return;
         }
 
         StringBuilder stringBuilder = new StringBuilder("");
-        userEntities.forEach(userEntity -> {
+        userEntities.filter(userEntity -> {
+            if (!allowPositive)
+                return userEntity.getKarma() < 0;
+            else
+                return true;
+        }).forEach(userEntity -> {
             String username = userEntity.getUsername();
             if (StringUtils.isEmpty(username)) {
                 String firstName = userEntity.getFirstName() == null ? "" : userEntity.getFirstName();
