@@ -94,12 +94,12 @@ public abstract class AbstractKarmaCommand implements CommandHandler {
 
         Message replied = message.replyToMessage();
         if (replied == null) {
-            sendMessage(message.chat().id(), ERROR_NOT_REPLY);
+//            sendMessage(message.chat().id(), ERROR_NOT_REPLY);
             return;
         }
 
         if (message.from().id().equals(replied.from().id())) {
-            sendMessage(message.chat().id(), ERROR_YOURSELF);
+//            sendMessage(message.chat().id(), ERROR_YOURSELF);
             return;
         }
 
