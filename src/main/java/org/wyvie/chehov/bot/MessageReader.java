@@ -21,6 +21,7 @@ import org.wyvie.chehov.database.model.UserEntity;
 import org.wyvie.chehov.database.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,6 +37,8 @@ public class MessageReader {
     private final EmojiHelper emojiHelper;
 
     private int lastOffset;
+
+    private List<Integer> bannedUsers;
 
     @Autowired
     public MessageReader(CommandProcessor commandProcessor,
@@ -53,6 +56,16 @@ public class MessageReader {
         this.emojiHelper = emojiHelper;
 
         this.lastOffset = 0;
+
+        bannedUsers = new ArrayList<>();
+        String []bus = telegramProperties.getBannedUsers().split(",");
+        for (String bu : bus) {
+            try {
+                Integer id = Integer.parseInt(bu);
+                bannedUsers.add(id);
+            } catch (NumberFormatException ignored) {
+            }
+        }
     }
 
     @Scheduled(fixedDelay = 200)
@@ -70,7 +83,15 @@ public class MessageReader {
 
             Message message = update.message();
 
+            if (message != null && message.from() != null
+                    && bannedUsers.contains(message.from().id())) {
+                logger.debug("Message ignored from user " + message.from().id());
+                persistUser(message.from());
+                return;
+            }
+
             if (message != null && message.text() != null) {
+
                 logger.debug("Got message '" + message.text() + "' from chat_id " + message.chat().id());
 
                 persistUser(message.from());

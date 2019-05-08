@@ -16,6 +16,8 @@ public class TelegramProperties {
 
     private String timeZone;
 
+    private String bannedUsers;
+
     public String getApiKey() {
         return apiKey;
     }
@@ -62,6 +64,14 @@ public class TelegramProperties {
 
     public void setTimeZone(String timeZone) {
         this.timeZone = timeZone;
+    }
+
+    public String getBannedUsers() {
+        return bannedUsers;
+    }
+
+    public void setBannedUsers(String bannedUsers) {
+        this.bannedUsers = bannedUsers;
     }
 
     public static class Karma {
