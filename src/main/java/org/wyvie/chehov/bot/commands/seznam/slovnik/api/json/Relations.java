@@ -11,6 +11,12 @@ public class Relations {
     @SerializedName("Synonyma")
     @Expose
     private List<String> synonyma = null;
+    @SerializedName("Antonyma")
+    @Expose
+    private List<String> antonyma = null;
+    @SerializedName("P\u0159edpony")
+    @Expose
+    private List<String> predpony = null;
     @SerializedName("Odvozen\u00e1 slova")
     @Expose
     private List<String> odvozenaSlova = null;
@@ -37,9 +43,17 @@ public class Relations {
      * @param odvozenaSlova
      * @param synonyma
      */
-    public Relations(List<String> synonyma, List<String> odvozenaSlova, List<String> slovniSpojen, String dict, String direction) {
+    public Relations(List<String> synonyma,
+                     List<String> antonyma,
+                     List<String> predpony,
+                     List<String> odvozenaSlova,
+                     List<String> slovniSpojen,
+                     String dict,
+                     String direction) {
         super();
         this.synonyma = synonyma;
+        this.antonyma = antonyma;
+        this.predpony = predpony;
         this.odvozenaSlova = odvozenaSlova;
         this.slovniSpojen = slovniSpojen;
         this.dict = dict;
@@ -82,6 +96,22 @@ public class Relations {
         return synonyma;
     }
 
+    public List<String> getAntonyma() {
+        return antonyma;
+    }
+
+    public void setAntonyma(List<String> antonyma) {
+        this.antonyma = antonyma;
+    }
+
+    public List<String> getPredpony() {
+        return predpony;
+    }
+
+    public void setPredpony(List<String> predpony) {
+        this.predpony = predpony;
+    }
+
     public void setSynonyma(List<String> synonyma) {
         this.synonyma = synonyma;
     }
@@ -90,6 +120,8 @@ public class Relations {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("synonyma", synonyma)
+                .append("antonyma", antonyma)
+                .append("predpony", predpony)
                 .append("odvozenaSlova", odvozenaSlova)
                 .append("slovniSpojen", slovniSpojen)
                 .append("dict", dict)

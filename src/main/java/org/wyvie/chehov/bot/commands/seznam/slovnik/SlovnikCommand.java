@@ -223,6 +223,16 @@ public class SlovnikCommand implements CommandHandler {
                 blocks.add(renderAdditionalSection("Synonyma", synonyms, dict));
             }
 
+            List<String> antonyms = relations.getAntonyma();
+            if (antonyms != null) {
+                blocks.add(renderAdditionalSection("Antonyma", antonyms, dict));
+            }
+
+            List<String> predpony = relations.getPredpony();
+            if (predpony != null) {
+                blocks.add(renderAdditionalSection("Předpony", predpony, dict));
+            }
+
             List<FtxSamp> ftxSamps = slovnikJSON.getFtxSamp();
             if (ftxSamps != null && !ftxSamps.isEmpty()) {
                 List<String> ftxSampSection = new ArrayList<>();
