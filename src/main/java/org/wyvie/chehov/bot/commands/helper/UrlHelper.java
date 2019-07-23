@@ -7,27 +7,20 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 @Service
 public class UrlHelper {
 
     public String getPageSource(String url) throws IOException {
-        URL pageUrl = null;
-        try {
-            pageUrl = new URL(url);
-        } catch (MalformedURLException e) {
-        }
+        return getPage(url, null);
+    }
 
-        if (pageUrl == null)
-            return "";
-
-        URLConnection urlConnection = pageUrl.openConnection();
-        urlConnection.setRequestProperty("User-Agent",
-                "Mozilla/5.0 (Windows NT 6.1; WOW64) " +
-                        "AppleWebKit/537.11 (KHTML, like Gecko) " +
-                        "Chrome/23.0.1271.95 Safari/537.11");
-
-        return toString(urlConnection.getInputStream());
+    public String getPageSource(String url, Map<String, String> headers) throws IOException{
+        return getPage(url, headers);
     }
 
     private static String toString(InputStream inputStream) throws IOException
@@ -75,5 +68,35 @@ public class UrlHelper {
             return "";
 
         return toString(is);
+    }
+
+    public String urlEncode(String text) throws UnsupportedEncodingException {
+        return URLEncoder.encode(text, StandardCharsets.UTF_8.name());
+    }
+
+    public String urlDecode(String text) throws UnsupportedEncodingException {
+        return URLDecoder.decode(text, StandardCharsets.UTF_8.name());
+    }
+
+
+    private String getPage(String url, Map<String, String> headers) throws IOException {
+        URL pageUrl = null;
+        try {
+            pageUrl = new URL(url);
+        } catch (MalformedURLException e) {
+        }
+
+        if (pageUrl == null)
+            return "";
+
+        URLConnection urlConnection = pageUrl.openConnection();
+        urlConnection.setRequestProperty("User-Agent",
+                "Mozilla/5.0 (Windows NT 6.1; WOW64) " +
+                        "AppleWebKit/537.11 (KHTML, like Gecko) " +
+                        "Chrome/23.0.1271.95 Safari/537.11");
+        if (!headers.isEmpty()) {
+            headers.forEach(urlConnection::setRequestProperty);
+        }
+        return toString(urlConnection.getInputStream());
     }
 }
