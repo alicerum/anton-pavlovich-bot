@@ -25,7 +25,7 @@ public class SlovnikJSON {
     private List<Other> other = null;
     @SerializedName("morf_table")
     @Expose
-    private List<Object> morfTable = null;
+    private Morftable morfTable = null;
     @SerializedName("short")
     @Expose
     private List<Object> _short = null;
@@ -45,7 +45,7 @@ public class SlovnikJSON {
      * @param morfTable
      * @param _short
      */
-    public SlovnikJSON(List<Translate> translate, String sound, Relations relations, List<FtxSamp> ftxSamp, List<Other> other, List<Object> morfTable, List<Object> _short) {
+    public SlovnikJSON(List<Translate> translate, String sound, Relations relations, List<FtxSamp> ftxSamp, List<Other> other, Morftable morfTable, List<Object> _short) {
         super();
         this.translate = translate;
         this.sound = sound;
@@ -96,11 +96,11 @@ public class SlovnikJSON {
         this.other = other;
     }
 
-    public List<Object> getMorfTable() {
+    public Morftable getMorfTable() {
         return morfTable;
     }
 
-    public void setMorfTable(List<Object> morfTable) {
+    public void setMorfTable(Morftable morfTable) {
         this.morfTable = morfTable;
     }
 
