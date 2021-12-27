@@ -38,7 +38,7 @@ public class MessageReader {
 
     private int lastOffset;
 
-    private List<Integer> bannedUsers;
+    private List<Long> bannedUsers;
 
     @Autowired
     public MessageReader(CommandProcessor commandProcessor,
@@ -61,7 +61,7 @@ public class MessageReader {
         String []bus = telegramProperties.getBannedUsers().split(",");
         for (String bu : bus) {
             try {
-                Integer id = Integer.parseInt(bu);
+                Long id = Long.parseLong(bu);
                 bannedUsers.add(id);
             } catch (NumberFormatException ignored) {
             }
@@ -129,7 +129,7 @@ public class MessageReader {
         String messageText = message.text();
 
         // if starts with '/' symbol, it's a command
-        if (!StringUtils.isEmpty(messageText) &&
+        if (StringUtils.hasLength(messageText) &&
                 messageText.startsWith("/")) {
 
             messageText = messageText.toLowerCase().trim();
@@ -152,7 +152,7 @@ public class MessageReader {
     }
 
     private void persistUser(User user) {
-        Integer userId = user.id();
+        Long userId = user.id();
         if (userId != null) {
             UserEntity userEntity = userRepository
                     .findById(userId)

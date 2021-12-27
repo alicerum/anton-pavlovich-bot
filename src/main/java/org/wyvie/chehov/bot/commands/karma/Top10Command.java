@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.wyvie.chehov.TelegramProperties;
 import org.wyvie.chehov.database.model.UserEntity;
 import org.wyvie.chehov.database.repository.UserRepository;

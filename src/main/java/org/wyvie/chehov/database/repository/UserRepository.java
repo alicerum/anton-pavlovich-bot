@@ -7,7 +7,7 @@ import org.wyvie.chehov.database.model.UserEntity;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<UserEntity, Integer> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Page<UserEntity> findAllByOrderByKarmaDesc(Pageable pageable);
     Page<UserEntity> findAllByOrderByKarmaAsc(Pageable pageable);
 

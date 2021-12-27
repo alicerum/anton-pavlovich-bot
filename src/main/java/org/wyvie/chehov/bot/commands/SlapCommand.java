@@ -41,9 +41,9 @@ public class SlapCommand implements CommandHandler {
         Message replied = message.replyToMessage();
         if (replied != null) {
             username = toUsername(replied.from());
-            if (!StringUtils.isEmpty(args))
+            if (StringUtils.hasLength(args))
                 object = args;
-        } else if (!StringUtils.isEmpty(args)) {
+        } else if (StringUtils.hasLength(args)) {
 
             String argun = args;
             if (argun.startsWith("@"))

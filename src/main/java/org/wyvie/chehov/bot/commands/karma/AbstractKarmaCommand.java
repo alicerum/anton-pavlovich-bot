@@ -40,7 +40,7 @@ public abstract class AbstractKarmaCommand implements CommandHandler {
 
     abstract void processKarma(User user);
 
-    private int getUserKarma(int userId) {
+    private int getUserKarma(long userId) {
         Optional<UserEntity> userEntity = userRepository.findById(userId);
         return userEntity.map(UserEntity::getKarma).orElse(0);
     }
@@ -58,21 +58,21 @@ public abstract class AbstractKarmaCommand implements CommandHandler {
         userRepository.save(user);
     }
 
-    protected LocalDateTime lastSetKarma(int userId) {
+    protected LocalDateTime lastSetKarma(long userId) {
         Optional<UserEntity> userEntity = userRepository.findById(userId);
 
         return userEntity.map(UserEntity::getLastSetKarma).orElse(
                 LocalDateTime.MIN);
     }
 
-    private void updateLastSetKarma(int userId) {
+    private void updateLastSetKarma(long userId) {
         userRepository.findById(userId).ifPresent(user -> {
             user.setLastSetKarma(LocalDateTime.now());
             userRepository.save(user);
         });
     }
 
-    private boolean canUserUpdateNow(int userId) {
+    private boolean canUserUpdateNow(long userId) {
         int updateDelay = telegramProperties.getKarma().getUpdateDelay();
 
         LocalDateTime lastUserSetKarma =
@@ -90,7 +90,7 @@ public abstract class AbstractKarmaCommand implements CommandHandler {
     }
 
     void processCommand(Message message) {
-        int userId = message.from().id();
+        long userId = message.from().id();
 
         Message replied = message.replyToMessage();
         if (replied == null) {
@@ -154,7 +154,7 @@ public abstract class AbstractKarmaCommand implements CommandHandler {
                 return true;
         }).forEach(userEntity -> {
             String username = userEntity.getUsername();
-            if (StringUtils.isEmpty(username)) {
+            if (!StringUtils.hasLength(username)) {
                 String firstName = userEntity.getFirstName() == null ? "" : userEntity.getFirstName();
                 String lastName = userEntity.getLastName() == null ? "" : userEntity.getLastName();
                 username = (firstName + " " + lastName).trim();

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class UserEntity {
 
     @Id
-    private int id;
+    private long id;
 
     @Column
     private String username;
@@ -35,11 +35,11 @@ public class UserEntity {
     @Column
     private LocalDateTime lastSeen;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
